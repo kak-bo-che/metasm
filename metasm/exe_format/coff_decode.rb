@@ -557,7 +557,9 @@ class COFF
 				when 'REL32'
 					l = new_label('pcrel')
 					s.encoded.add_export(l, r.va+4)
-					s.encoded.reloc[r.va] = Metasm::Relocation.new(Expression[r.sym.name, :-, l], :u32, @endianness)
+					if r.sym
+					  s.encoded.reloc[r.va] = Metasm::Relocation.new(Expression[r.sym.name, :-, l], :u32, @endianness)
+				  end
 				end
 			}
 		} if not @header.characteristics.include?('RELOCS_STRIPPED')
