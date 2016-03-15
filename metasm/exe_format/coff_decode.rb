@@ -66,7 +66,9 @@ class COFF
 	class RelocObj
 		def decode(coff)
 			super(coff)
-			@sym = coff.symbols[@symidx]
+			if coff.symbols
+			  @sym = coff.symbols[@symidx]
+		  end
 		end
 	end
 
@@ -111,9 +113,11 @@ class COFF
 			end
 			if namep and ords
 				namep.zip(ords).each { |np, oi|
-					@exports[oi].name_p = np
-					if coff.sect_at_rva(np)
-						@exports[oi].name = coff.decode_strz
+					if @exports[oi]
+						@exports[oi].name_p = np
+						if coff.sect_at_rva(np)
+							@exports[oi].name = coff.decode_strz
+						end
 					end
 				}
 			end
