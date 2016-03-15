@@ -91,7 +91,8 @@ class COFF
 					addr = addrs[i]
 					if addr >= coff.directory['export_table'][0] and addr < coff.directory['export_table'][0] + coff.directory['export_table'][1] and coff.sect_at_rva(addr)
 						name = coff.decode_strz
-						e.forwarder_lib, name = name.split('.', 2)
+						e.forwarder_lib, name = name.split('.', 2) if name.split('.', ).length > 1
+
 						if name[0] == ?#
 							e.forwarder_ordinal = name[1..-1].to_i
 						else
@@ -557,7 +558,9 @@ class COFF
 			s.relocs.each { |r|
 				case r.type
 				when 'DIR32'
-					s.encoded.reloc[r.va] = Metasm::Relocation.new(Expression[r.sym.name], :u32, @endianness)
+					if r.sym
+						s.encoded.reloc[r.va] = Metasm::Relocation.new(Expression[r.sym.name], :u32, @endianness)
+					end
 				when 'REL32'
 					l = new_label('pcrel')
 					s.encoded.add_export(l, r.va+4)
