@@ -433,7 +433,7 @@ class COFF
 	# may return self when rva points to the coff header
 	# returns nil if none match, 0 never matches
 	def sect_at_rva(rva)
-		return if not rva or rva <= 0
+		return if !rva || !rva.kind_of?(Numeric) || rva <= 0
 		if sections and not @sections.empty?
 			if s = @sections.find { |s_| s_.virtaddr <= rva and s_.virtaddr + EncodedData.align_size((s_.virtsize == 0 ? s_.rawsize : s_.virtsize), @optheader.sect_align) > rva }
 				s.encoded.ptr = rva - s.virtaddr
@@ -458,7 +458,7 @@ class COFF
 		elsif s = @sections.find { |s_| s_.encoded.export[name] }
 			s.virtaddr + s.encoded.export[name]
 		else
-		       @encoded.export[name]
+		  @encoded.export[name]
 		end
 	end
 
